@@ -11,8 +11,10 @@ class RoleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
+    
     public function run(): void
     {
+        //commentaire
         $roles = ['Admin', 'Touriste', 'Propriétaire'];
 
         foreach ($roles as $role) {
