@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Location d'Appartements - Coupe du Monde 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#2563eb",
+              secondary: "#f59e0b",
+            },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      :where([class^="ri-"])::before { content: "\f3c2"; }
+      .auth-container {
+          background-image: url('https://public.readdy.ai/ai/img_res/b572e7eb47fa59bcaf883fd010c6aa6e.jpg');
+          background-size: cover;
+          background-position: center;
+      }
+      .modal {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          z-index: 1000;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 min-h-screen">
+    <div
+      id="loginForm"
+      class="auth-container min-h-screen flex items-center justify-center"
+    >
+      <div class="bg-white p-8 rounded-lg shadow-xl w-96">
+        <h2 class="text-3xl font-bold text-center mb-8">Connexion</h2>
+        <form id="login" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-button shadow-sm focus:ring-primary focus:border-primary"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700"
+              >Mot de passe</label
+            >
+            <input
+              type="password"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-button shadow-sm focus:ring-primary focus:border-primary"
+            />
+          </div>
+          <div>
+            <button
+              type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-button shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              Se connecter
+            </button>
+          </div>
+          <div class="text-sm text-center">
+            <a
+              href="#"
+              class="text-primary hover:text-primary/90"
+              onclick="showRegisterForm()"
+            >
+              Créer un compte
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="registerForm"
+      class="auth-container min-h-screen hidden flex items-center justify-center"
+    >
+      <div class="bg-white p-8 rounded-lg shadow-xl w-96">
+        <h2 class="text-3xl font-bold text-center mb-8">Inscription</h2>
+        <form id="register" class="space-y-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700"
+              >Nom complet</label
+            >
+            <input
+              type="text"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-button shadow-sm focus:ring-primary focus:border-primary"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-button shadow-sm focus:ring-primary focus:border-primary"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700"
+              >Mot de passe</label
+            >
+            <input
+              type="password"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-button shadow-sm focus:ring-primary focus:border-primary"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700"
+              >Confirmer le mot de passe</label
+            >
+            <input
+              type="password"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-button shadow-sm focus:ring-primary focus:border-primary"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Rôle</label>
+            <div class="mt-2 grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                onclick="selectRole('tourist')"
+                class="role-btn flex flex-col items-center p-4 border rounded-button hover:border-primary"
+              >
+                <i class="ri-user-line text-2xl"></i>
+                <span class="mt-2">Touriste</span>
+              </button>
+              <button
+                type="button"
+                onclick="selectRole('owner')"
+                class="role-btn flex flex-col items-center p-4 border rounded-button hover:border-primary"
+              >
+                <i class="ri-home-line text-2xl"></i>
+                <span class="mt-2">Propriétaire</span>
+              </button>
+            </div>
+          </div>
+          <div>
+            <button
+              type="submit"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-button shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+            >
+              S'inscrire
+            </button>
+          </div>
+          <div class="text-sm text-center">
+            <a
+              href="#"
+              class="text-primary hover:text-primary/90"
+              onclick="showLoginForm()"
+            >
+              Déjà inscrit? Se connecter
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="homePage" class="hidden">
+      <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+          <div class="flex justify-between h-16">
+            <div class="flex">
+              <div class="flex-shrink-0 flex items-center">
+                <span class="text-2xl font-['Pacifico']">logo</span>
+              </div>
+            </div>
+            <div class="flex items-center">
+              <button
+                onclick="showFavorites()"
+                class="p-2 rounded-full text-gray-600 hover:text-primary"
+              >
+                <i class="ri-heart-line text-xl"></i>
+              </button>
+              <div class="ml-4 relative">
+                <button onclick="toggleProfileMenu()" class="flex items-center">
+                  <img
+                    class="h-8 w-8 rounded-full object-cover"
+                    src="https://public.readdy.ai/ai/img_res/b1d1a1a5cf78be9877e455910e32f0b8.jpg"
+                    alt="Profile"
+                  />
+                </button>
+              </div>
+              <button
+                onclick="logout()"
+                class="ml-4 px-4 py-2 rounded-button text-white bg-primary hover:bg-primary/90"
+              >
+                Déconnexion
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="mb-8">
+          <div class="bg-white rounded-lg shadow-sm p-4">
+            <div class="flex items-center space-x-4">
+              <div class="flex-1">
+                <div class="relative">
+                  <i
+                    class="ri-search-line absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  ></i>
+                  <input
+                    type="text"
+                    placeholder="Rechercher une ville"
+                    class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-button focus:ring-primary focus:border-primary"
+                  />
+                </div>
+              </div>
+              <div class="flex-1">
+                <input
+                  type="date"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:ring-primary focus:border-primary"
+                />
+              </div>
+              <div class="flex-1">
+                <input
+                  type="date"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-button focus:ring-primary focus:border-primary"
+                />
+              </div>
+              <button
+                class="px-6 py-2 bg-primary text-white rounded-button hover:bg-primary/90"
+              >
+                Rechercher
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex items-center space-x-4">
+            <select
+              onchange="changeItemsPerPage(this)"
+              class="px-3 py-2 border border-gray-300 rounded-button focus:ring-primary focus:border-primary"
+            >
+              <option value="4">4 par page</option>
+              <option value="10">10 par page</option>
+              <option value="25">25 par page</option>
+            </select>
+          </div>
+        </div>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          id="apartmentGrid"
+        ></div>
+
+        <div class="mt-8 flex justify-center">
+          <nav
+            class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+          >
+            <button
+              class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            >
+              <i class="ri-arrow-left-s-line"></i>
+            </button>
+            <button
+              class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              1
+            </button>
+            <button
+              class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              2
+            </button>
+            <button
+              class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              3
+            </button>
+            <button
+              class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            >
+              <i class="ri-arrow-right-s-line"></i>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div id="detailsModal" class="modal">
+      <div class="fixed inset-0 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg max-w-4xl w-full mx-4 shadow-xl">
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-2xl font-bold" id="modalTitle"></h3>
+              <button
+                onclick="closeModal()"
+                class="text-gray-400 hover:text-gray-500"
+              >
+                <i class="ri-close-line text-2xl"></i>
+              </button>
+            </div>
+            <div class="mb-6">
+              <img
+                id="modalImage"
+                class="w-full h-64 object-cover rounded-lg"
+                src=""
+                alt="Apartment"
+              />
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+              <div>
+                <h4 class="font-semibold mb-2">Description</h4>
+                <p id="modalDescription" class="text-gray-600"></p>
+                <div class="mt-4">
+                  <h4 class="font-semibold mb-2">Équipements</h4>
+                  <ul
+                    id="modalAmenities"
+                    class="list-disc list-inside text-gray-600"
+                  ></ul>
+                </div>
+              </div>
+              <div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <div class="mb-4">
+                    <span
+                      class="text-2xl font-bold text-primary"
+                      id="modalPrice"
+                    ></span>
+                    <span class="text-gray-600">/nuit</span>
+                  </div>
+                  <div class="mb-4">
+                    <p class="text-gray-600">
+                      <i class="ri-map-pin-line"></i>
+                      <span id="modalLocation"></span>
+                    </p>
+                  </div>
+                  <div class="mb-4">
+                    <p class="text-gray-600">
+                      <i class="ri-calendar-line"></i>
+                      <span id="modalDates"></span>
+                    </p>
+                  </div>
+                  <button
+                    class="w-full bg-primary text-white py-2 px-4 rounded-button hover:bg-primary/90"
+                  >
+                    Réserver maintenant
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const mockApartments = [
+        {
+          id: 1,
+          title: "Appartement Luxueux au Centre-ville",
+          description:
+            "Magnifique appartement avec vue panoramique sur la ville. Entièrement rénové avec des finitions haut de gamme.",
+          price: 250,
+          city: "Casablanca",
+          country: "Maroc",
+          image:
+            "https://public.readdy.ai/ai/img_res/2b4f3921101a8cc68e6865547924decd.jpg",
+          amenities: ["Wi-Fi", "Climatisation", "Cuisine équipée", "Terrasse"],
+          dates: "01/03/2030 - 30/07/2030",
+        },
+        {
+          id: 2,
+          title: "Suite Élégante avec Vue sur Mer",
+          description:
+            "Suite spacieuse avec terrasse privée et vue imprenable sur l'océan. Décoration moderne et raffinée.",
+          price: 180,
+          city: "Rabat",
+          country: "Maroc",
+          image:
+            "https://public.readdy.ai/ai/img_res/aa8d8af904d5d036a3b9df0283fe5b09.jpg",
+          amenities: ["Piscine", "Parking", "Salle de sport", "Service de chambre"],
+          dates: "15/03/2030 - 15/08/2030",
+        },
+      ];
+
+      let favorites = new Set();
+
+      function renderApartments() {
+        const grid = document.getElementById("apartmentGrid");
+        grid.innerHTML = "";
+
+        mockApartments.forEach((apt) => {
+          const card = document.createElement("div");
+          card.className =
+            "bg-white rounded-lg shadow-sm overflow-hidden transition-transform hover:scale-105";
+          card.innerHTML = `
+                          <img src="${apt.image}" class="w-full h-48 object-cover" alt="${apt.title}">
+                          <div class="p-4">
+                              <div class="flex justify-between items-start">
+                                  <h3 class="text-lg font-semibold">${apt.title}</h3>
+                                  <button onclick="toggleFavorite(${apt.id})" class="text-2xl ${favorites.has(apt.id) ? "text-red-500" : "text-gray-400"} hover:text-red-500">
+                                      <i class="ri-heart-${favorites.has(apt.id) ? "fill" : "line"}"></i>
+                                  </button>
+                              </div>
+                              <p class="text-gray-600 mt-2">${apt.city}, ${apt.country}</p>
+                              <div class="mt-4 flex justify-between items-center">
+                                  <span class="text-xl font-bold text-primary">${apt.price}€ <span class="text-sm text-gray-600">/nuit</span></span>
+                                  <button onclick="showDetails(${apt.id})" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-primary/90">
+                                      Voir détails
+                                  </button>
+                              </div>
+                          </div>
+                      `;
+          grid.appendChild(card);
+        });
+      }
+
+      function toggleFavorite(id) {
+        if (favorites.has(id)) {
+          favorites.delete(id);
+        } else {
+          favorites.add(id);
+        }
+        renderApartments();
+      }
+
+      function showDetails(id) {
+        const apt = mockApartments.find((a) => a.id === id);
+        document.getElementById("modalTitle").textContent = apt.title;
+        document.getElementById("modalImage").src = apt.image;
+        document.getElementById("modalDescription").textContent = apt.description;
+        document.getElementById("modalPrice").textContent = `${apt.price}€`;
+        document.getElementById("modalLocation").textContent =
+          `${apt.city}, ${apt.country}`;
+        document.getElementById("modalDates").textContent = apt.dates;
+
+        const amenitiesList = document.getElementById("modalAmenities");
+        amenitiesList.innerHTML = apt.amenities.map((a) => `<li>${a}</li>`).join("");
+
+        document.getElementById("detailsModal").style.display = "block";
+      }
+
+      function closeModal() {
+        document.getElementById("detailsModal").style.display = "none";
+      }
+      function showRegisterForm() {
+        document.getElementById("loginForm").classList.add("hidden");
+        document.getElementById("registerForm").classList.remove("hidden");
+      }
+
+      function showLoginForm() {
+        document.getElementById("registerForm").classList.add("hidden");
+        document.getElementById("loginForm").classList.remove("hidden");
+      }
+
+      function selectRole(role) {
+        document.querySelectorAll(".role-btn").forEach((btn) => {
+          btn.classList.remove("border-primary", "text-primary");
+        });
+        event.currentTarget.classList.add("border-primary", "text-primary");
+      }
+
+      document.getElementById("login").addEventListener("submit", (e) => {
+        e.preventDefault();
+        document.getElementById("loginForm").classList.add("hidden");
+        document.getElementById("homePage").classList.remove("hidden");
+        renderApartments();
+      });
+
+      document.getElementById("register").addEventListener("submit", (e) => {
+        e.preventDefault();
+        showLoginForm();
+      });
+
+      function logout() {
+        document.getElementById("homePage").classList.add("hidden");
+        document.getElementById("loginForm").classList.remove("hidden");
+      }
+
+      function changeItemsPerPage(select) {
+        console.log(`Changed items per page to: ${select.value}`);
+      }
+
+      window.onclick = function (event) {
+        if (event.target == document.getElementById("detailsModal")) {
+          closeModal();
+        }
+      };
+    </script>
+  </body>
+</html>
